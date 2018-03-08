@@ -23,8 +23,8 @@ struct SphereLevelSet : public LevelSet
     return -x / ( 1.e-12 + x.norm() ) ;
   }
 
-  void local_inv_inertia( Mat& I ) const override {
-    I = Mat::Identity() / ( local_volume() * 2./5. ) ;
+  void local_inv_inertia( Mat3& I ) const override {
+    I = Mat3::Identity() / ( local_volume() * 2./5. ) ;
   }
 
   Scalar local_volume() const override {
@@ -44,7 +44,7 @@ struct PlaneLevelSet : public LevelSet
     return Vec3(0, 0, -1) ;
   }
 
-  void local_inv_inertia( Mat& I ) const override {
+  void local_inv_inertia( Mat3& I ) const override {
     I.setZero() ;
   }
 
@@ -81,7 +81,7 @@ struct TorusLevelSet : public LevelSet
     return (proj - x) / (1.e-12 + n) ;
   }
 
-  void local_inv_inertia( Mat& I ) const override {
+  void local_inv_inertia( Mat3& I ) const override {
     //From http://mathworld.wolfram.com/Torus.html
     I.setZero() ;
     I(0,0) = I(1,1) = 1./( 5./8 * m_radius * m_radius + .5 ) ;
@@ -136,7 +136,7 @@ struct HoleLevelSet : public LevelSet
     return (proj - x) / (1.e-12 + n) ;
   }
 
-  void local_inv_inertia( Mat& I ) const override {
+  void local_inv_inertia( Mat3& I ) const override {
     I.setZero() ;
   }
 
@@ -194,7 +194,7 @@ struct CylinderLevelSet : public LevelSet
     return (proj - x) / (1.e-12 + n) ;
   }
 
-  void local_inv_inertia( Mat& I ) const override {
+  void local_inv_inertia( Mat3& I ) const override {
     //From http://mathworld.wolfram.com/Torus.html
     I.setZero() ;
     I(0,0) = I(1,1) = 6./( 3. + m_height * m_height ) ;
@@ -261,7 +261,7 @@ struct HourglassLevelSet : public LevelSet
     }
   }
 
-  void local_inv_inertia( Mat& I ) const override {
+  void local_inv_inertia( Mat3& I ) const override {
     I.setZero() ;
   }
 
@@ -302,7 +302,7 @@ struct MeshLevelSet : public LevelSet
   Scalar eval_local(const Vec3 &x) const override ;
   Vec3 grad_local(const Vec3 &x) const override ;
 
-  void local_inv_inertia( Mat& I ) const override {
+  void local_inv_inertia( Mat3& I ) const override {
     I.setZero() ;
   }
   Scalar local_volume() const override {
@@ -322,7 +322,7 @@ private:
   Scalar m_radius ;
 
   Grid m_grid ;
-  Vec  m_offset ;
+  Vec3  m_offset ;
   Scalar m_emptyVal ;
   AbstractScalarField< Grid > m_values ;
 };

@@ -2,10 +2,10 @@
 #ifndef mpm_FIELD_BASE_IMPL_HH
 #define mpm_FIELD_BASE_IMPL_HH
 
-#include "FieldBase.h"
+#include "fieldBase.h"
 
-#include "MeshBase.h"
-#include "ScalarField.h"
+#include "meshBase.h"
+#include "scalarField.h"
 
 namespace mpm {
   
@@ -16,7 +16,7 @@ namespace mpm {
     m_mesh.interpolate( x, itp );
   
     mpm::set_zero( res ) ;
-    for( Index k = 0 ; k < itp.nodes.rows() ; ++k ) {
+    for( ID k = 0 ; k < itp.nodes.rows() ; ++k ) {
       res += itp.coeffs[k] * segment( itp.nodes[k] ) ;
     }
   
@@ -33,7 +33,7 @@ namespace mpm {
   template< typename Derived >
   void FieldBase< Derived >::add_at( const typename MeshType::Interpolation &itp, const ValueType&   val )
   {
-    for( Index k = 0 ; k < itp.nodes.rows() ; ++k ) {
+    for( ID k = 0 ; k < itp.nodes.rows() ; ++k ) {
       segment( itp.nodes[k] ) += itp.coeffs[k] * val ;
     }
   }
@@ -49,7 +49,7 @@ namespace mpm {
   template< typename Derived >
   Derived& FieldBase< Derived >::set_constant(const ValueType &val) {
   #pragma omp parallel for
-    for( Index i = 0 ; i < m_size ; ++i ) {
+    for( ID i = 0 ; i < m_size ; ++i ) {
       segment(i) = val ;
     }
     return derived() ;

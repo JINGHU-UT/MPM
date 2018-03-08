@@ -7,7 +7,7 @@
 namespace mpm {
 
 template <typename Derived>
-Vec MeshBase< Derived>::pos( const Location& loc ) const
+Vec3 MeshBase< Derived>::pos( const Location& loc ) const
 {
 	CellGeo geo ;
 	get_geo( loc.cell, geo ) ;

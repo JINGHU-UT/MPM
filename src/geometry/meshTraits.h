@@ -22,9 +22,9 @@ struct MeshTraits< Grid > {
 
 	typedef Vec3i Cell    ;
 	typedef Voxel CellGeo ;
-	static constexpr Index NV = CellGeo::NV ;
-	static constexpr Index NC = CellGeo::NC ;
-	static constexpr Index NQ = CellGeo::NQ ;
+	static constexpr ID NV = CellGeo::NV ;
+	static constexpr ID NC = CellGeo::NC ;
+	static constexpr ID NQ = CellGeo::NQ ;
 
 	typedef std::vector<Cell> Cells ;
 };
@@ -38,9 +38,9 @@ struct MeshTraits< TetGrid > {
 
 	typedef Eigen::Array< int, 4, 1 > Cell  ;
 	typedef Tet CellGeo ;
-	static constexpr Index NV = CellGeo::NV ;
-	static constexpr Index NC = CellGeo::NC ;
-	static constexpr Index NQ = CellGeo::NQ ;
+	static constexpr ID NV = CellGeo::NV ;
+	static constexpr ID NC = CellGeo::NC ;
+	static constexpr ID NQ = CellGeo::NQ ;
 
 	typedef std::vector<Cell> Cells ;
 };

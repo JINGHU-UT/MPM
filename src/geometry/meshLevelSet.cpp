@@ -31,7 +31,7 @@ Vec3 MeshLevelSet::grad_local(const Vec3 &x) const {
 }
 
 static Vec3   closestPointOnTriangle( const Vec3& p, const Mat3& T ) ;
-static Scalar signedDistPointTriangle(const Vec3& P, const Mat3& T, const TriangularMesh &mesh, const Index face) ;
+static Scalar signedDistPointTriangle(const Vec3& P, const Mat3& T, const TriangularMesh &mesh, const ID face) ;
 static Vec3   barycentricCoordinates(const Vec3& p, const Mat3& T ) ;
 
 bool MeshLevelSet::compute()
@@ -44,8 +44,8 @@ bool MeshLevelSet::compute()
   triMesh.computeFaceNormals() ;
 
   // AABB
-  Arr bbMax = triMesh.vertices().rowwise().maxCoeff() ;
-  Arr bbMin = triMesh.vertices().rowwise().minCoeff() ;
+  Arr3 bbMax = triMesh.vertices().rowwise().maxCoeff() ;
+  Arr3 bbMin = triMesh.vertices().rowwise().minCoeff() ;
 
   const Scalar absRad = (bbMax - bbMin).matrix().norm() * m_radius ;
   bbMax += absRad ;
@@ -61,26 +61,26 @@ bool MeshLevelSet::compute()
   unsigned nF = triMesh.nFaces() ;
   for( unsigned i = 0 ; i < nF ; ++i )
   {
-    Mat vertices ;
+    Mat3 vertices ;
     vertices.col(0) = triMesh.vertex( i, 0 ) - m_offset ;
     vertices.col(1) = triMesh.vertex( i, 1 ) - m_offset ;
     vertices.col(2) = triMesh.vertex( i, 2 ) - m_offset ;
 
-    Arr bbMax = vertices.rowwise().maxCoeff().array() + absRad ;
-    Arr bbMin = vertices.rowwise().minCoeff().array() - absRad ;
+    Arr3 bbMax = vertices.rowwise().maxCoeff().array() + absRad ;
+    Arr3 bbMin = vertices.rowwise().minCoeff().array() - absRad ;
 
     Grid::Location maxCell, minCell ;
     m_grid.locate( bbMax.matrix(), maxCell ) ;
     m_grid.locate( bbMin.matrix(), minCell ) ;
 
-    for( Index j = minCell.cell[0] ; j <= maxCell.cell[0]+1 ; ++j ) {
-      for( Index k = minCell.cell[1] ; k <= maxCell.cell[1]+1 ; ++k ) {
-        for( Index l = minCell.cell[2] ; l <= maxCell.cell[2]+1 ; ++l ) {
+    for( ID j = minCell.cell[0] ; j <= maxCell.cell[0]+1 ; ++j ) {
+      for( ID k = minCell.cell[1] ; k <= maxCell.cell[1]+1 ; ++k ) {
+        for( ID l = minCell.cell[2] ; l <= maxCell.cell[2]+1 ; ++l ) {
           Grid::Vertex node( j, k, l ) ;
           const Scalar d = signedDistPointTriangle(
             m_grid.nodePosition( node ), vertices, triMesh, i ) ;
 
-          Scalar &val = m_values[ m_grid.nodeIndex(node) ] ;
+          Scalar &val = m_values[ m_grid.nodeID(node) ] ;
           if( std::fabs(d) < std::fabs(val) )
             val = d ;
         }
@@ -92,14 +92,14 @@ bool MeshLevelSet::compute()
   // Correct signs of far-away cells
 
 #pragma omp parallel for
-  for( Index j = 0 ; j < m_grid.dim()[0]+1 ; ++ j ) {
-    for( Index k = 0 ; k < m_grid.dim()[1]+1 ; ++ k ) {
+  for( ID j = 0 ; j < m_grid.dim()[0]+1 ; ++ j ) {
+    for( ID k = 0 ; k < m_grid.dim()[1]+1 ; ++ k ) {
 
       int sign = 1 ; //Default to outside
 
-      for( Index l = 0 ; l < m_grid.dim()[2]+1 ; ++ l ) {
+      for( ID l = 0 ; l < m_grid.dim()[2]+1 ; ++ l ) {
         Grid::Vertex node( j, k, l ) ;
-        Scalar &val = m_values[ m_grid.nodeIndex(node) ] ;
+        Scalar &val = m_values[ m_grid.nodeID(node) ] ;
         if( val != emptyVal ) sign = val>0 ? 1 : -1 ;
         val = std::min( std::fabs( val ), absRad ) * sign ;
       }
@@ -111,7 +111,7 @@ bool MeshLevelSet::compute()
   return true ;
 }
 
-static Scalar signedDistPointTriangle(const Vec3& P, const Mat& T, const TriangularMesh &mesh, const Index face )
+static Scalar signedDistPointTriangle(const Vec3& P, const Mat3& T, const TriangularMesh &mesh, const ID face )
 {
   const Vec3 proj = closestPointOnTriangle( P, T ) ;
   const Scalar dist = (P - proj).norm() ;
@@ -121,11 +121,11 @@ static Scalar signedDistPointTriangle(const Vec3& P, const Mat& T, const Triangu
 }
 
 // From Christer Ericson -- Real-Time Collision Detection
-static Vec3 closestPointOnTriangle(const Vec3& p, const Mat& T )
+static Vec3 closestPointOnTriangle(const Vec3& p, const Mat3& T )
 {
-  const Mat::ConstColXpr a = T.col(0) ;
-  const Mat::ConstColXpr b = T.col(1) ;
-  const Mat::ConstColXpr c = T.col(2) ;
+  const Mat3::ConstColXpr a = T.col(0) ;
+  const Mat3::ConstColXpr b = T.col(1) ;
+  const Mat3::ConstColXpr c = T.col(2) ;
 
    // Check if P in vertex region outside A
    Vec3 ap = p - a;
@@ -172,11 +172,11 @@ static Vec3 closestPointOnTriangle(const Vec3& p, const Mat& T )
 
 // Compute barycentric coordinates (u, v, w) for
 // point p with respect to triangle (a, b, c)
-static Vec3 barycentricCoordinates(const Vec3& p, const Mat& T )
+static Vec3 barycentricCoordinates(const Vec3& p, const Mat3& T )
 {
-  const Mat::ConstColXpr a = T.col(0) ;
-  const Mat::ConstColXpr b = T.col(1) ;
-  const Mat::ConstColXpr c = T.col(2) ;
+  const Mat3::ConstColXpr a = T.col(0) ;
+  const Mat3::ConstColXpr b = T.col(1) ;
+  const Mat3::ConstColXpr c = T.col(2) ;
 
   Vec3 v0 = b - a, v1 = c - a, v2 = p - a;
   const Scalar d00 = v0.dot(v0);

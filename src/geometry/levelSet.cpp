@@ -39,7 +39,7 @@ void LevelSet::to_local(const Vec3 &world, Vec3 &local) const
 //	Quaternion fi = m_frame ; fi.w() = -fi.w() ;
 	local = ( m_frame.inverse() * ( world - m_origin ) ) / m_scale  ;
 }
-void LevelSet::to_local_mat( Mat &mat) const
+void LevelSet::to_local_mat( Mat3 &mat) const
 {
 	mat = m_frame.inverse().matrix() / m_scale ;
 }
@@ -49,9 +49,9 @@ void LevelSet::inv_inertia(Mat6 &Mi) const
 	Mi.setIdentity() ;
 	Mi.diagonal().head<3>() /= local_volume() ;
 
-	Mat I ;
+	Mat3 I ;
 	local_inv_inertia( I );
-	Mat w2l ;
+	Mat3 w2l ;
 	to_local_mat( w2l );
 
 	Mi.block<3,3>(3,3) = w2l.transpose() * I * w2l ;

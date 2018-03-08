@@ -10,12 +10,12 @@
 namespace mpm{
 
   void BoundaryInfo::velProj( Mat3& proj ) const{
-    switch(){
+    switch(bc){
       case BoundaryInfo::Stick:
         proj.setZero() ;
         break ;
       case BoundaryInfo::Slip:
-        proj = Mat::Identity() - normal * normal.transpose() ;
+        proj = Mat3::Identity() - normal * normal.transpose() ;
         break ;
       case BoundaryInfo::Normal:
       case BoundaryInfo::Corner:

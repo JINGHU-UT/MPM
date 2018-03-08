@@ -8,7 +8,7 @@
 
 namespace mpm {
   
-  Index Voxel::sample_uniform(const unsigned N, const Index start, Points &points, Frames &frames) const
+  ID Voxel::sample_uniform(const unsigned N, const ID start, Points &points, Frames &frames) const
   {
     Scalar min = box.minCoeff() ;
   
@@ -21,7 +21,7 @@ namespace mpm {
     Vec6 frame ;
     tensor_view( frame ).set_diag( Vec3( .25 * subBox.array() * subBox.array() ) ) ;
   
-    Index p = start ;
+    ID p = start ;
     for( int i = 0 ; i < Nsub[0] ; ++i )
       for( int j = 0 ; j < Nsub[1] ; ++j )
         for( int k = 0 ; k < Nsub[2] ; ++k ) {
@@ -45,7 +45,7 @@ namespace mpm {
       for( int j = 0 ; j < 2 ; ++j ) {
         for( int k = 0 ; k < 2 ; ++k ) {
           Vec3i corner ( i, j, k) ;
-          qps.col( cornerIndex(corner) ) = qp0.array() + corner.cast< Scalar >().array()*dqp.array() ;
+          qps.col( cornerID(corner) ) = qp0.array() + corner.cast< Scalar >().array()*dqp.array() ;
         }
       }
     }

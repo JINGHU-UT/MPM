@@ -19,10 +19,10 @@ static constexpr Scalar s_sqrt_23 = s_sqrt_2 / s_sqrt_3 ;
 template< typename Derived >
 struct TensorView
 {
-  static constexpr Index Size       = Derived::SizeAtCompileTime ;
+  static constexpr ID Size       = Derived::SizeAtCompileTime ;
   static constexpr bool  HasSymPart = ( Size == 6 || Size == 9 ) ;
   static constexpr bool  HasSpiPart = ( Size == 3 || Size == 9 ) ;
-  static constexpr Index SpiOff     = HasSymPart ? 6 : 0 ;
+  static constexpr ID SpiOff     = HasSymPart ? 6 : 0 ;
 
   explicit TensorView( Derived map )
     : m_map( map )
@@ -145,7 +145,7 @@ inline void make_cross_mat( const Vec3& x, Mat3& mat ) {
   return make_cross_mat( x, mat.block<3,3>(0,0) ) ;
 }
 
-void compute_anisotropy_matrix( const Mat& A, Mat6 & Abar ) ;
+void compute_anisotropy_matrix( const Mat3& A, Mat6 & Abar ) ;
 
 } // mpm 
 

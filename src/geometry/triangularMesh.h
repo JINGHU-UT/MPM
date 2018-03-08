@@ -1,211 +1,88 @@
 
-#include "tet.h"
+#ifndef MPM_TRIANGULAR_MESH_H_
+#define MPM_TRIANGULAR_MESH_H_
 
-#include "tensor.h"
+#include "utils/alg.h"
+#include "utils/file.h"
+#include "utils/log.h"
+
+#include <string>
 
 namespace mpm {
 
-void Tet::to_world( Vec3& pos ) const {
+class File ;
 
-  if( geometry.rotate(0) ) {
-    pos = Vec3( pos[0], -pos[2], pos[1] ) ;
-  }
-  if( geometry.rotate(1) ) {
-    pos = Vec3( pos[2], pos[1], -pos[0] ) ;
-  }
-  if( geometry.rotate(2) ) {
-    pos = Vec3( -pos[1], pos[0], pos[2] ) ;
-  }
-
-  pos[0] = geometry.sign(0)*pos[0] ;
-  pos[1] = geometry.sign(1)*pos[1] ;
-  pos[2] = geometry.sign(2)*pos[2] ;
-
-}
-void Tet::to_local( Vec3& pos ) const {
-
-  pos[0] = geometry.sign(0)*pos[0] ;
-  pos[1] = geometry.sign(1)*pos[1] ;
-  pos[2] = geometry.sign(2)*pos[2] ;
-
-  if( geometry.rotate(2) ) {
-    pos = Vec3( pos[1], -pos[0], pos[2] ) ;
-  }
-  if( geometry.rotate(1) ) {
-    pos = Vec3( -pos[2], pos[1], pos[0] ) ;
-  }
-  if( geometry.rotate(0) ) {
-    pos = Vec3( pos[0], pos[2], -pos[1] ) ;
-  }
-}
-
-void Tet::update_geometry( unsigned char symmetry, int num )
-{
-  geometry.part = num %2 ;
-
-  switch( num/2 ) {
-    case 1:
-      // Rot y, sym x
-      geometry.rot = 1 << 1 ;
-      geometry.sym = 1 << 0 ;
-      break ;
-    case 2:
-      // Rot x, sym z
-      geometry.rot = 1 << 0 ;
-      geometry.sym = 1 << 2 ;
-      break ;
-    default:
-      geometry.rot = 0 ;
-      geometry.sym = 0 ;
-      break ;
-  }
-
-  geometry.sym ^= symmetry ;
-
-  Vec3 o (-.5,-.5,-.5)   ;
-  Vec3 o_rot = o ;
-  to_world( o_rot );
-
-  origin.array() += box*( o_rot - o ).array() ;
-
-  Vec3 rot_box = box ;
-  to_local( rot_box ) ;
-  box = rot_box.array().abs() ;
-
-}
-
-
-
-void Tet::offset( int cornerIndex, Vec3 &v ) const
+class TriangularMesh
 {
 
-  v.setZero() ;
+public:
+  typedef unsigned Index ;
 
-  switch (cornerIndex) {
-    case 1:
-      v[geometry.part] += box[geometry.part] ;
-      break;
-    case 2:
-      v[0] = box[0] ;
-      v[1] = box[1] ;
-      break ;
-    case 3:
-      v[2] = box[2] ;
-      break ;
-    default:
-      break ;
+  TriangularMesh() {}
+
+  bool loadObj ( const char* fileName ) ;
+  void computeFaceNormals() ;
+
+
+
+  Index nFaces() const { return m_vertexIndices.cols() ; }
+  Index nVertices() const { return m_vertices.cols() ; }
+
+  bool hasVertexNormals() const
+  { return m_normalIndices.cols() > 0 ; }
+  bool hasVertexUVs() const
+  { return m_uvIndices.cols() > 0 ; }
+  bool hasFaceNormals() const
+  { return m_faceNormals.cols() > 0 ; }
+
+  DynMat3::ConstColXpr vertex( Index face, Index num ) const
+  {
+    return m_vertices.col( m_vertexIndices( num, face ) ) ;
   }
-}
-
-void Tet::compute_vertices( Vertices& vertices ) const
-{
-  vertices.setZero() ;
-  vertices(geometry.part, 1) = box[geometry.part] ;
-  vertices(0,2) = box[0] ;
-  vertices(1,2) = box[1] ;
-  vertices(2,3) = box[2] ;
-}
-
-void Tet::local_coords(const Vec3 &pos, Coords &coords) const
-{
-  const Vec3 scaled = pos.array()/box ;
-
-  coords[0] = 1 - scaled[2] - scaled[geometry.part] ;
-  coords[1] = scaled[geometry.part] - scaled[1-geometry.part] ;
-  coords[2] = scaled[1-geometry.part] ;
-  coords[3] = scaled[2] ;
-}
-
-void Tet::compute_derivatives( const Coords & coords, Derivatives& dc_dx ) const
-{
-  (void) coords ;
-
-  dc_dx.setZero() ;
-  dc_dx(0,  geometry.part) = -1./box[  geometry.part] ;
-  dc_dx(1,  geometry.part) =  1./box[  geometry.part] ;
-  dc_dx(1,1-geometry.part) = -1./box[1-geometry.part] ;
-  dc_dx(2,1-geometry.part) =  1./box[1-geometry.part] ;
-  dc_dx(0,2) = -1/box[2] ;
-  dc_dx(3,2) =  1/box[2] ;
-
-  //to_word
-
-  if( geometry.rotate(0) ) {
-    dc_dx.col(2).swap( dc_dx.col(1) ) ;
-    dc_dx.col(1) *= -1 ;
+  DynMat3::ConstColXpr normal( Index face, Index num ) const
+  {
+    assert( hasVertexNormals() ) ;
+    return m_vertexNormals.col( m_normalIndices( num, face ) ) ;
   }
-  if( geometry.rotate(1) ) {
-    dc_dx.col(2).swap( dc_dx.col(0) ) ;
-    dc_dx.col(2) *= -1 ;
-  }
-  if( geometry.rotate(2) ) {
-    dc_dx.col(1).swap( dc_dx.col(0) ) ;
-    dc_dx.col(0) *= -1 ;
+  DynMat3::ConstColXpr uv( Index face, Index num ) const
+  {
+    assert( hasVertexUVs() ) ;
+    return m_vertexUVs.col( m_uvIndices( num, face ) ) ;
   }
 
-  dc_dx.col(0) = geometry.sign(0)*dc_dx.col(0) ;
-  dc_dx.col(1) = geometry.sign(1)*dc_dx.col(1) ;
-  dc_dx.col(2) = geometry.sign(2)*dc_dx.col(2) ;
-}
-
-Index Tet::sample_uniform( const unsigned N, const Index start, Points &points, Frames &frames ) const
-{
-
-  Index p = start ;
-
-  if( N == 1 ) {
-
-    const Scalar a = 1./6 ;
-    const Scalar b = 1./2 ;
-
-    (void) N ;
-    const Vec3 subBox = box.array() / std::pow(24, 1./3) ; //Nsub.array().cast< Scalar >() ;
-
-    Vec6 frame ;
-    tensor_view( frame ).set_diag( Vec3( .25 * subBox.array() * subBox.array() ) ) ;
-
-    for( Index k = 0 ; k < 4 ; ++k ) {
-      Coords coords = Coords::Constant(a) ;
-      coords[k] = b ;
-      points.col(p) = pos(coords) ;
-      frames.col(p) = frame ;
-      ++p ;
-    }
-  } else {
-
-    Scalar min = box.minCoeff() ;
-
-    Vec3i Nsub ;
-    for( int k = 0 ; k < 3 ; ++ k)
-      Nsub[k] = N * std::round( box[k] / min ) ;
-
-    const Vec3 subBox = box.array() / Nsub.array().cast< Scalar >() ;
-
-    Vec3 rot_box = subBox ;
-    to_world( rot_box ) ;
-
-    Vec6 frame ;
-    tensor_view( frame ).set_diag( Vec3( .25 * rot_box.array() * rot_box.array() ) ) ;
-
-    Vec3 local ;
-    Coords coords ;
-
-    for( int i = 0 ; i < Nsub[0] ; ++i )
-      for( int j = 0 ; j < Nsub[1] ; ++j )
-        for( int k = 0 ; k < Nsub[2] ; ++k ) {
-
-          local = (Vec3(i+.5,j+.5,k+.5).array() * subBox.array()).matrix() ;
-          local_coords( local, coords );
-          if( coords.minCoeff() < 0 )
-            continue ;
-
-          points.col(p) = pos( coords )  ;
-          frames.col(p) = frame ;
-          ++p ;
-        }
+  DynMat3::ConstColXpr faceNormal( Index face ) const
+  {
+    assert( hasFaceNormals() ) ;
+    return m_faceNormals.col( face ) ;
   }
+  Vec3 interpolatedNormal( Index face, const Vec3& baryCoords ) const  ;
 
-  return p - start;
-}
+  const std::string& name() const
+  { return m_name ; }
 
-} //mpm
+  const DynMat3& vertices() const { return m_vertices ; }
+
+private:
+
+  bool firstObjPass( File& file ) ;
+  bool secondObjPass( File& file ) ;
+
+  // Vertex data
+  DynMat3 m_vertices ;
+  DynMat3 m_vertexNormals ;
+  DynMat3 m_vertexUVs ;
+
+  // Face data
+  DynMat3 m_faceNormals ;
+  Eigen::Matrix< Index, 3, Eigen::Dynamic > m_vertexIndices ;
+  Eigen::Matrix< Index, 3, Eigen::Dynamic > m_normalIndices ;
+  Eigen::Matrix< Index, 3, Eigen::Dynamic > m_uvIndices ;
+
+  std::string m_name ;
+
+} ;
+
+
+} //d6
+
+#endif

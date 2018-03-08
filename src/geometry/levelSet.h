@@ -90,14 +90,14 @@ public:
 protected:
 
   void to_local( const Vec3 &world, Vec3 &local) const ;
-  void to_local_mat ( Mat &mat ) const ;
+  void to_local_mat ( Mat3 &mat ) const ;
 
   LevelSet() ;
 
   virtual Scalar eval_local( const Vec3& ) const = 0 ;
   virtual Vec3    grad_local( const Vec3& ) const = 0 ;
   virtual Scalar local_volume( ) const = 0 ;
-  virtual void local_inv_inertia( Mat &I ) const = 0 ;
+  virtual void local_inv_inertia( Mat3 &I ) const = 0 ;
 
 private:
   Vec3       m_origin ;

@@ -1,0 +1,3 @@
+/home/yuan/Dropbox/whoAmI/mpm_implement/my_impl_mpm/src/geometry/build/CMakeFiles/edit_cache.dir
+/home/yuan/Dropbox/whoAmI/mpm_implement/my_impl_mpm/src/geometry/build/CMakeFiles/rebuild_cache.dir
+/home/yuan/Dropbox/whoAmI/mpm_implement/my_impl_mpm/src/geometry/build/CMakeFiles/mpm_geo.dir

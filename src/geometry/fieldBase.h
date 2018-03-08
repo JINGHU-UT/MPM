@@ -1,10 +1,10 @@
 
 
-#ifndef mpm_FIELD_BASE_HH
-#define mpm_FIELD_BASE_HH
+#ifndef mpm_FIELD_BASE_H_
+#define mpm_FIELD_BASE_H_
 
 #include "expr.h"
-#include "fieldfuncbase.h"
+#include "fieldFuncBase.h"
 
 
 
@@ -23,7 +23,7 @@ namespace mpm{
     typedef MeshBase< typename Traits::MeshType > MeshType ; 
     typedef typename Traits::ValueType ValueType ; 
 
-    static constexpr Index D = Traits::Dimension ; 
+    static constexpr ID D = Traits::Dimension ; 
 
     typedef typename Segmenter< D >::Seg Seg  ;
     typedef typename Segmenter< D >::ConstSeg ConstSeg  ;
@@ -56,7 +56,7 @@ namespace mpm{
     {
       assert( f.size() == size() ) ;
       #pragma omp parallel for
-      for( Index  i = 0 ; i < size() ; ++i ) {
+      for( ID  i = 0 ; i < size() ; ++i ) {
         f.eval_at_node( i, segment(i) );
       }
       return derived();
@@ -64,26 +64,26 @@ namespace mpm{
 
     // Interpolation
   
-    void  add_at( const Vec& x, const ValueType& val ) ;
+    void  add_at( const Vec3& x, const ValueType& val ) ;
     void  add_at( const typename MeshType::Interpolation &itp, const ValueType& val ) ;
-    void eval_at( const Vec& x, ValueType& res ) const ;
+    void eval_at( const Vec3& x, ValueType& res ) const ;
   
-    ValueType eval_at( const Vec& x ) const {
+    ValueType eval_at( const Vec3& x ) const {
       ValueType seg ; eval_at( x, seg );
       return seg ;
     }
   
     // Value at node
-    Seg      segment( const Index i ) { return Segmenter< D >::segment( m_data, i) ; }
-    ConstSeg segment( const Index i ) const { return Segmenter< D >::segment(m_data, i) ; }
+    Seg      segment( const ID i ) { return Segmenter< D >::segment( m_data, i) ; }
+    ConstSeg segment( const ID i ) const { return Segmenter< D >::segment(m_data, i) ; }
   
-    Index size() const { return m_size ; }
+    ID size() const { return m_size ; }
   
   
     // Operators
-    ValueType operator() ( const Vec&  x ) const { return eval_at(x) ; }
-    ConstSeg  operator[] ( const Index i ) const { return segment(i) ; }
-    Seg       operator[] ( const Index i )       { return segment(i) ; }
+    ValueType operator() ( const Vec3&  x ) const { return eval_at(x) ; }
+    ConstSeg  operator[] ( const ID i ) const { return segment(i) ; }
+    Seg       operator[] ( const ID i )       { return segment(i) ; }
   
   
     // Info
@@ -114,10 +114,15 @@ namespace mpm{
 
     protected:
       const MeshType & m_mesh ;
-      Index m_size ;
+      ID m_size ;
       DynVec   m_data ;
   
   }; // class fieldbase
 
 
 } // namespace mpm
+
+
+
+#endif
+

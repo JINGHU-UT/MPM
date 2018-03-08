@@ -14,7 +14,7 @@ struct FieldTraits< AbstractVectorField< MeshT > >  {
 
   typedef MeshT  MeshType ;
   typedef Vec3   ValueType ;
-  static constexpr Index Dimension = 3 ;
+  static constexpr ID Dimension = 3 ;
 };
 
 template < typename MeshT >
@@ -47,8 +47,8 @@ public:
     return FieldNorm< mpm::AbstractVectorField, MeshT >( *this ) ;
   }
 
-  void get_spi_tensor( const Vec3& x, Mat& tensor ) const ;
-  void add_spi_tensor( const Vec3& x, Mat& tensor ) const ;
+  void get_spi_tensor( const Vec3& x, Mat3& tensor ) const ;
+  void add_spi_tensor( const Vec3& x, Mat3& tensor ) const ;
 
 };
 

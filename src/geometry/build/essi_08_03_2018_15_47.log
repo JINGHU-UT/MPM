@@ -1,0 +1,21 @@
+                                                               
+                                                               
+  The Finite Element Interpreter                               
+                                                               
+  Real ESSI Simulator                                          
+  Realistic Earthquake Soil Structure Interaction Simulator    
+                                                             
+  Sequential processing mode.                                
+                                                             
+Version Name   : Real ESSI Short Course Version. Release date: Mar 6 2018 at 20:19:56. Tag: 55a9f3f10a
+Version Branch : yuan
+Compile Date   : Mar  6 2018 at 20:37:48
+Compile User   : yuan
+Compile Sysinfo: cml01 4.13.0-36-generic x86_64 GNU/Linux
+Runtime User   : Runtime Sysinfo: Time Now       : Mar 08 2018 at 15:47:27
+                                                               
+Static startup tips:                                           
+ * Remember: Every command ends with a semicolon ';'.          
+ * Type 'quit;' or 'exit;' to finish.                          
+ * Run 'essi -h' to see available command line options.        
+                                                               

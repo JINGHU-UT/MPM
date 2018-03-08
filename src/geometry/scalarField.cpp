@@ -20,7 +20,7 @@ Vec3 AbstractScalarField< MeshT >::grad_at( const Vec3& x ) const
   m_mesh.get_derivatives( loc, dc_dx ) ;
 
   Vec3 grad = Vec3::Zero() ;
-  for( Index k = 0 ; k < nodes.rows() ; ++k ) {
+  for( ID k = 0 ; k < nodes.rows() ; ++k ) {
     grad += dc_dx.row(k) * Base::segment( nodes[k] ) ;
   }
   

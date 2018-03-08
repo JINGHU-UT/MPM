@@ -38,7 +38,7 @@ namespace mpm{
       return cell ;
     }
 
-    Index index() const ;
+    ID index() const ;
 
   };
 
@@ -56,13 +56,13 @@ namespace mpm{
     
     void set_box( const Vec3& box ) ;
 
-    Index nNodes() const
+    ID nNodes() const
     { return (m_dim[0]+1) * (m_dim[1]+1) * (m_dim[2] + 1) ; }
 
-    Index nCells() const
+    ID nCells() const
     { return (m_dim[0]) * (m_dim[1]) * (m_dim[2]) ; }
 
-    Index cellIndex( const Cell& cell ) const
+    ID cellID( const Cell& cell ) const
     {
       return (m_dim[2]) * (m_dim[1]) * cell[0]
         +  (m_dim[2]) * cell[1]
@@ -107,7 +107,7 @@ namespace mpm{
 
     void make_bc( const BoundaryMapper& mapper, BoundaryConditions &bc ) const ;
 
-    Index nAdjacent( Index ) const {
+    ID nAdjacent( ID ) const {
       return NV ;
     }
     
@@ -116,7 +116,7 @@ namespace mpm{
       return firstCorner( node ) ;
     }
 
-    Index nodeIndex( const Vertex& node ) const
+    ID nodeID( const Vertex& node ) const
     {
       return (m_dim[2]+1) * (m_dim[1]+1) * node[0]
         +  (m_dim[2]+1) * node[1]

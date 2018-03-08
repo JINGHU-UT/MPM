@@ -3,7 +3,7 @@
 #ifndef mpm_field_funcs_impl_h_
 #define mpm_field_funcs_impl_h_
 
-#include "FieldFuncBase.h"
+#include "fieldFuncBase.h"
 
 namespace mpm{
 
@@ -11,7 +11,7 @@ namespace mpm{
   struct FuncTraits{
   };
 
-  template <typename Derived, Index D, 
+  template <typename Derived, ID D, 
             typename MeshT = typename FieldTraits<typename FuncTraits<Derived>::FieldType>::MeshType>
   struct UnaryFieldFunc: public FieldFuncBase< Derived, D, MeshT>
   {
@@ -23,13 +23,13 @@ namespace mpm{
   	  : Base( field.mesh() ), m_field(field)
   	  {}
 
-  	Index size() const{
+  	ID size() const{
   		return m_field.size();
   	}
 
   protected:
   	const FieldType& m_field ; 
-  }
+  }; 
 
   template<typename MeshT> struct FieldTrace ; 
 
@@ -47,7 +47,7 @@ namespace mpm{
   	using Base::m_field ;
   	explicit FieldTrace( FieldType const& field): Base(field){}
 
-  	void eval_at_node( Index i, typename Base::Seg v ) const
+  	void eval_at_node( ID i, typename Base::Seg v ) const
   	{
   		v = m_field[i][0] ;
   	}
@@ -73,7 +73,7 @@ namespace mpm{
   	using Base::m_field ;
   	explicit DeviatoricPart( const FieldType & field ) : Base(field) {}
 
-  	void eval_at_node( Index i, typename Base::Seg v ) const
+  	void eval_at_node( ID i, typename Base::Seg v ) const
   	{
   		v = m_field[i] ;
   		v[0] = 0 ;
@@ -99,7 +99,7 @@ namespace mpm{
   	using Base::m_field ;
   	explicit FieldNorm( const FieldType & field ) : Base(field) {}
 
-  	void eval_at_node( Index i, typename Base::Seg v ) const
+  	void eval_at_node( ID i, typename Base::Seg v ) const
   	{
   		v = m_field[i].norm() ;
   	}

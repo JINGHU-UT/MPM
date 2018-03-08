@@ -3,6 +3,10 @@
 #define MPM_PARTICLES_HH
 
 #include "expr.h"
+#include "mesh.impl.h"
+#include "tensor.h"
+
+#include "utils/log.h"
 
 #include <vector>
 #include <mutex>
@@ -72,7 +76,7 @@ public:
   Particles() ;
 
   void generate(const ScalarExpr &expr, const unsigned nSamples,
-          const MeshType& mesh, const bool alignOnCells , const Vec3 &initialOri) ;
+          const MeshType& mesh, const bool alignOnCells , const Vec3& initialOri) ;
 
   size_t count() const { return m_count ; }
 

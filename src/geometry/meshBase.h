@@ -5,7 +5,8 @@
 #define mpm_mesh_base_h_
 
 #include "geometry.fwd.h"
-#include "Voxel.h"
+#include "voxel.h"
+#include "meshTraits.h"
 
 
 namespace mpm{
@@ -31,7 +32,7 @@ namespace mpm{
     } ;
 
     typedef Eigen::Matrix< Scalar, NC, 1 > Coords ;
-    typedef Eigen::Matrix<  Index, NV, 1 > NodeList ;
+    typedef Eigen::Matrix<  ID, NV, 1 > NodeList ;
     typedef Eigen::Matrix< Scalar, NV, 1 > CoefList ;
     typedef Eigen::Matrix< Scalar, NV, 3 > Derivatives ;
 
@@ -51,18 +52,18 @@ namespace mpm{
     const Derived& derived() const
     { return static_cast< const Derived& >( *this ) ; }
 
-    Index nNodes() const { return derived().nNodes() ; }
-    Index nCells() const { return derived().nCells() ; }
+    ID nNodes() const { return derived().nNodes() ; }
+    ID nCells() const { return derived().nCells() ; }
 
-    Index cellIndex( const Cell& cell ) const
-    { return derived().cellIndex( cell ) ; }
+    ID cellID( const Cell& cell ) const
+    { return derived().cellID( cell ) ; }
 
-    Vec box() const { return derived().box() ; }
-    Vec clamp_point( const Vec& p ) const {
-      return Vec::Zero().cwiseMax(p).cwiseMin(box()) ;
+    Vec3 box() const { return derived().box() ; }
+    Vec3 clamp_point( const Vec3& p ) const {
+      return Vec3::Zero().cwiseMax(p).cwiseMin(box()) ;
     }
 
-    void locate( const Vec &x, Location& loc ) const {
+    void locate( const Vec3 &x, Location& loc ) const {
       derived().locate( x, loc ) ;
     }
     void interpolate( const Location& loc, Interpolation& itp ) const {
@@ -72,7 +73,7 @@ namespace mpm{
       derived().get_derivatives( loc, dc_dx ) ;
     }
 
-    void interpolate( const Vec &x, Interpolation& itp ) const {
+    void interpolate( const Vec3 &x, Interpolation& itp ) const {
       Location loc ;
       derived().locate( x, loc ) ;
       derived().interpolate( loc, itp ) ;
@@ -92,11 +93,11 @@ namespace mpm{
       derived().make_bc( mapper, bc ) ;
     }
 
-    Index nAdjacent( Index node ) const {
+    ID nAdjacent( ID node ) const {
       return derived().nAdjacent( node ) ;
     }
 
-    Vec pos( const Location& loc ) const ;
+    Vec3 pos( const Location& loc ) const ;
 
 
   };

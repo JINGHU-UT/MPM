@@ -1,8 +1,6 @@
 
 #include "triangularMesh.h"
 
-#include "utils/File.h"
-#include "utils/Log.h"
 
 #include <Eigen/Geometry>
 
@@ -208,7 +206,7 @@ void TriangularMesh::computeFaceNormals()
 #pragma omp parallel for
   for( Index i = 0 ; i < n ; ++i ) {
     // counterclockwise ori -- assumes non-degenerated faces
-    const Vec ccw = ( vertex(i,1)-vertex(i,0) ).cross( vertex(i,2)-vertex(i,0) ).normalized() ;
+    const Vec3 ccw = ( vertex(i,1)-vertex(i,0) ).cross( vertex(i,2)-vertex(i,0) ).normalized() ;
     int inv = 0 ;
 
     if( hasVertexNormals() ) {
@@ -224,7 +222,7 @@ void TriangularMesh::computeFaceNormals()
 
 }
 
-Vec TriangularMesh::interpolatedNormal( Index face, const Vec& baryCoords ) const
+Vec3 TriangularMesh::interpolatedNormal( Index face, const Vec3& baryCoords ) const
 {
 
   if( hasVertexNormals() ) {

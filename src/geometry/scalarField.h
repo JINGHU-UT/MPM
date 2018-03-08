@@ -10,7 +10,7 @@ template < typename MeshT >
 struct FieldTraits< AbstractScalarField< MeshT > >  {
   typedef MeshT  MeshType ;
   typedef Scalar ValueType ;
-  static constexpr Index Dimension = 1 ;
+  static constexpr ID Dimension = 1 ;
 };
 
 template < typename MeshT >
@@ -29,7 +29,7 @@ public:
   }
 
   // Naive local gradient
-  Vec grad_at( const Vec& x) const ;
+  Vec3 grad_at( const Vec3& x) const ;
 
   template <typename Func>
   AbstractScalarField( const FieldFuncBase< Func, Base::D, MeshT > & func )

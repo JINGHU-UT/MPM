@@ -1,11 +1,7 @@
 
 #include "particles.h"
 
-#include "meshImpl.h"
 
-#include "tensor.h"
-
-#include "utils/Log.h"
 
 
 namespace mpm {
@@ -20,7 +16,7 @@ Particles::Particles()
 
 void Particles::generate(const ScalarExpr &expr, const unsigned nSamples,
 						 const MeshType &mesh,   const bool alignOnCells,
-						 const Vec& initialOri )
+						 const Vec3& initialOri )
 {
 	m_count = 0 ;
 
@@ -32,7 +28,7 @@ void Particles::generate(const ScalarExpr &expr, const unsigned nSamples,
 		if( alignOnCells && expr( cellGeo.center() ) == 0. )
 			continue ;
 
-		Index n = cellGeo.sample_uniform( nSamples, m_count, m_centers, m_frames ) ;
+		ID n = cellGeo.sample_uniform( nSamples, m_count, m_centers, m_frames ) ;
 		const Scalar volume = cellGeo.volume() / n ;
 
 		for( size_t i = m_count ; i < m_count+n ; ) {

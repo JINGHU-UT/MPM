@@ -2,7 +2,7 @@
 
 
 #include "grid.h"
-#include "BoundaryInfo.h"
+#include "boundaryInfo.h"
 
 namespace mpm{
 
@@ -21,8 +21,8 @@ namespace mpm{
     return *this ;
   }
 
-  Index GridIterator::index() const {
-    return grid.cellIndex( cell ) ;
+  ID GridIterator::index() const {
+    return grid.cellID( cell ) ;
   }
 
 
@@ -47,7 +47,7 @@ namespace mpm{
   void Grid::locate(const Vec3 &x, Location &loc) const
   {
     loc.coords = x.array()*m_idx.array() ;
-    loc.cell = loc.coords.cast< Index >();
+    loc.cell = loc.coords.cast< ID >();
     clamp_cell( loc.cell) ;
 
     loc.coords -= loc.cell.cast< Scalar >() ;
@@ -59,8 +59,8 @@ namespace mpm{
       for( int j = 0 ; j < 2 ; ++j )
         for( int k = 0 ; k < 2 ; ++k ) {
           const Cell corner (i,j,k) ;
-          const int idx = Voxel::cornerIndex( i, j, k ) ;
-          itp.nodes[ idx ] = nodeIndex( loc.cell + corner ) ;
+          const int idx = Voxel::cornerID( i, j, k ) ;
+          itp.nodes[ idx ] = nodeID( loc.cell + corner ) ;
           itp.coeffs[ idx ] = Voxel::cornerCoeff( corner, loc.coords );
         }
 
@@ -72,7 +72,7 @@ namespace mpm{
       for( int j = 0 ; j < 2 ; ++j )
         for( int k = 0 ; k < 2 ; ++k ) {
           const Cell corner (i,j,k) ;
-          const int idx = Voxel::cornerIndex( i, j, k ) ;
+          const int idx = Voxel::cornerID( i, j, k ) ;
           Voxel::getCornerDerivatives( corner, loc.coords, dc_dx.row( idx ) );
         }
 
@@ -83,22 +83,22 @@ namespace mpm{
 
   void Grid::make_bc( const BoundaryMapper& mapper, BoundaryConditions &bc ) const
   {
-    for( Index i = 0 ; i <= m_dim[1] ; ++i ) {
-      for( Index j = 0 ; j <= m_dim[2] ; ++j ) {
-        bc[ nodeIndex( Vertex(0       , i, j) ) ].combine( mapper( "left"), Vec3(-1,0,0) ) ;
-        bc[ nodeIndex( Vertex(m_dim[0], i, j) ) ].combine( mapper("right"), Vec3( 1,0,0) ) ;
+    for( ID i = 0 ; i <= m_dim[1] ; ++i ) {
+      for( ID j = 0 ; j <= m_dim[2] ; ++j ) {
+        bc[ nodeID( Vertex(0       , i, j) ) ].combine( mapper( "left"), Vec3(-1,0,0) ) ;
+        bc[ nodeID( Vertex(m_dim[0], i, j) ) ].combine( mapper("right"), Vec3( 1,0,0) ) ;
       }
     }
-    for( Index i = 0 ; i <= m_dim[0] ; ++i ) {
-      for( Index j = 0 ; j <= m_dim[2] ; ++j ) {
-        bc[ nodeIndex( Vertex(i, 0       , j) ) ].combine( mapper("front"), Vec3(0,-1,0) ) ;
-        bc[ nodeIndex( Vertex(i, m_dim[1], j) ) ].combine( mapper( "back"), Vec3(0, 1,0) ) ;
+    for( ID i = 0 ; i <= m_dim[0] ; ++i ) {
+      for( ID j = 0 ; j <= m_dim[2] ; ++j ) {
+        bc[ nodeID( Vertex(i, 0       , j) ) ].combine( mapper("front"), Vec3(0,-1,0) ) ;
+        bc[ nodeID( Vertex(i, m_dim[1], j) ) ].combine( mapper( "back"), Vec3(0, 1,0) ) ;
       }
     }
-    for( Index i = 0 ; i <= m_dim[0] ; ++i ) {
-      for( Index j = 0 ; j <= m_dim[1] ; ++j ) {
-        bc[ nodeIndex( Vertex(i, j, 0       ) ) ].combine( mapper("bottom"), Vec3(0,0,-1) ) ;
-        bc[ nodeIndex( Vertex(i, j, m_dim[2]) ) ].combine( mapper(   "top"), Vec3(0,0, 1) ) ;
+    for( ID i = 0 ; i <= m_dim[0] ; ++i ) {
+      for( ID j = 0 ; j <= m_dim[1] ; ++j ) {
+        bc[ nodeID( Vertex(i, j, 0       ) ) ].combine( mapper("bottom"), Vec3(0,0,-1) ) ;
+        bc[ nodeID( Vertex(i, j, m_dim[2]) ) ].combine( mapper(   "top"), Vec3(0,0, 1) ) ;
       }
     }
   }

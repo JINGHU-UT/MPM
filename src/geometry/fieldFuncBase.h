@@ -9,7 +9,7 @@
 
 namespace mpm{
 
-template <typename Derived, Index D, typename MeshT>
+template <typename Derived, ID D, typename MeshT>
 struct FieldFuncBase
 {
   typedef MeshBase<MeshT> MeshType;
@@ -19,18 +19,18 @@ struct FieldFuncBase
 
   explicit FieldFuncBase( const MeshType& mesh ) : m_mesh(mesh) {}
 
-  ValueType operator[]( Index i ) const{
+  ValueType operator[]( ID i ) const{
     ValueType v ;
     return eval_at_node( i, Segmenter< D >::val2seg(v) ) ;
   }
 
-  void eval_at_node( Index i, Seg v ) const
+  void eval_at_node( ID i, Seg v ) const
   {
     return static_cast< const Derived& >(*this).eval_at_node(i, v) ;
   }
 
 
-  Index size( ) const
+  ID size( ) const
   {
     return static_cast< const Derived& >(*this).size() ;
   }

@@ -10,9 +10,9 @@ namespace mpm{
 
   struct Tet
   {
-    static constexpr Index NV = 4 ;
-    static constexpr Index NC = 4 ;
-    static constexpr Index NQ = 4 ;
+    static constexpr ID NV = 4 ;
+    static constexpr ID NC = 4 ;
+    static constexpr ID NQ = 4 ;
 
     typedef Eigen::Matrix<Scalar, NC, 1> Coords ; 
     typedef Eigen::Matrix<Scalar, NC, 3> Derivatives ; 
@@ -68,18 +68,18 @@ namespace mpm{
       return pos( Coords::Constant(1./NC) ) ;
     }
 
-    Vec3 vertex( int cornerIndex ) const
+    Vec3 vertex( int cornerID ) const
     {
       Vec3 v ;
-      offset( cornerIndex, v ) ;
+      offset( cornerID, v ) ;
   
       to_world(v) ;
       return v + origin ;
     }
   
-    void vertexCoords( int cornerIndex, Coords& coords ) const {
+    void vertexCoords( int cornerID, Coords& coords ) const {
       coords.setZero() ;
-      coords[cornerIndex] = 1. ;
+      coords[cornerID] = 1. ;
     }
   
   
@@ -94,7 +94,7 @@ namespace mpm{
     }
     void compute_derivatives( const Coords & coords, Derivatives& dc_dx ) const ;
   
-    Index sample_uniform( const unsigned N, const Index start, Points &points, Frames &frames ) const ;
+    ID sample_uniform( const unsigned N, const ID start, Points &points, Frames &frames ) const ;
   
     void get_qp( QuadPoints& qps, QuadWeights& weights ) const {
       const Scalar a = (5. -   std::sqrt(5.) ) / 20 ;
@@ -110,7 +110,7 @@ namespace mpm{
   private:
     void compute_vertices( Vertices& vertices ) const ;
 
-    void offset( int cornerIndex, Vec3 &v ) const ;
+    void offset( int cornerID, Vec3 &v ) const ;
 
     void to_world( Vec3& pos ) const ;
     void to_local( Vec3& pos ) const ;

@@ -1,10 +1,11 @@
-#ifndef MPM_utils_SCALAR_H_
-#define MPM_utils_SCALAR_H_
+#ifndef MPM_UTILS_SCALAR_H_
+#define MPM_UTILS_SCALAR_H_
 
 #include <cstdint>
 
 namespace mpm{
-  typedef int64_t ID;
+  typedef int ID;
+  // typedef int64_t ID;
   typedef double Scalar;
 }
 

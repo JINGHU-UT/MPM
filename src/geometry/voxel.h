@@ -2,15 +2,16 @@
 #ifndef mpm_VOXEL_HH
 #define mpm_VOXEL_HH
 
-#include "utils/alg.hh"
+#include "utils/alg.h"
+#include "utils/scalar.h"
 
-namespace d6 {
+namespace mpm {
 
 struct Voxel {
 
-  static constexpr Index NV = 8 ;
-  static constexpr Index NC = 3 ;
-  static constexpr Index NQ = 8 ;
+  static constexpr ID NV = 8 ;
+  static constexpr ID NC = 3 ;
+  static constexpr ID NQ = 8 ;
 
   typedef Eigen::Matrix< Scalar, NC, 1 > Coords ;
   typedef Eigen::Matrix< Scalar, NC, NQ> QuadPoints ;
@@ -22,16 +23,16 @@ struct Voxel {
   Vec3 box    ;  //!< Dimensions of cell
 
   template < typename Idx >
-  static inline Idx cornerIndex( Idx i, Idx j, Idx k ) {
+  static inline Idx cornerID( Idx i, Idx j, Idx k ) {
     return (i << 0) + (j << 1) + (k << 2) ;
   }
 
-  static inline Index cornerIndex( const Vec3i& corner ) {
-    return cornerIndex< Index >( corner[0], corner[1], corner[2] ) ;
+  static inline ID cornerID( const Vec3i& corner ) {
+    return cornerID< ID >( corner[0], corner[1], corner[2] ) ;
   }
 
-  void vertexCoords( int cornerIndex, Coords& coords ) const {
-    coords = Vec3( (cornerIndex&1)>>0, (cornerIndex&2)>>1, (cornerIndex&4)>>2 ) ;
+  void vertexCoords( int cornerID, Coords& coords ) const {
+    coords = Vec3( (cornerID&1)>>0, (cornerID&2)>>1, (cornerID&4)>>2 ) ;
   }
 
 
@@ -63,9 +64,9 @@ struct Voxel {
   }
 
 
-  Vec3 vertex( int cornerIndex ) const {
+  Vec3 vertex( int cornerID ) const {
     Coords coords ;
-    vertexCoords( cornerIndex, coords );
+    vertexCoords( cornerID, coords );
     return origin + ( coords.array() * box.array() ).matrix() ;
   }
 
@@ -73,7 +74,7 @@ struct Voxel {
 
   Scalar volume() const { return box.prod() ; }
 
-  Index sample_uniform( const unsigned N, const Index start, Points &points, Frames &frames ) const ;
+  ID sample_uniform( const unsigned N, const ID start, Points &points, Frames &frames ) const ;
 
   static QuadPoints Qps()  ;
 
