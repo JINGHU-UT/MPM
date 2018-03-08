@@ -1,0 +1,1 @@
+cmd='/usr/bin/cmake;-GUnix Makefiles;/home/yuan/Dropbox/whoAmI/mpm_implement/my_impl_mpm/src/test/build/googletest-prefix/src/googletest'
