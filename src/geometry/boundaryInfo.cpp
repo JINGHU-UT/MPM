@@ -159,13 +159,17 @@ namespace mpm{
     std::string line ;
     std::vector< std::string > tok ;
 
+
     while( iss >> line ) {
+
       tok.clear() ;
       split( line, ":", tok );
       if( tok.size() == 2 ) {
         m_bc[canonicalize(tok[0])] = from_string(canonicalize(tok[1])) ;
       }
+
     }
+
   }
 
 

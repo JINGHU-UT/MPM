@@ -19,3 +19,22 @@ Static startup tips:
  * Type 'quit;' or 'exit;' to finish.                          
  * Run 'essi -h' to see available command line options.        
                                                                
+Caught SIGTERM! Program ending.
+![0]=================================================:
+![0]RealESSI Stack Trace:
+![0]=================================================:
+![0]ProcessID 0:
+![0]  /lib/x86_64-linux-gnu/libc.so.6 : +0x354b0
+![0]  /lib/x86_64-linux-gnu/libc.so.6 : __read+0xe
+![0]  /lib/x86_64-linux-gnu/libc.so.6 : _IO_file_underflow+0x148
+![0]  /lib/x86_64-linux-gnu/libc.so.6 : _IO_default_uflow+0xe
+![0]  /lib/x86_64-linux-gnu/libc.so.6 : getc+0xd8
+![0]  essi() [0x95c340]
+![0]  essi : yylex(yy::feiparser::semantic_type*, yy::location*)+0x7bcb
+![0]  essi : yy::feiparser::parse()+0x151b
+![0]  essi : start_parser(int, char**)+0x26b
+![0]  essi : main+0x299
+![0]  /lib/x86_64-linux-gnu/libc.so.6 : __libc_start_main+0xf0
+![0]  essi : _start+0x29
+![0]==================================================:
+ 

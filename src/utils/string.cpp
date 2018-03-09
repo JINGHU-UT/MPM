@@ -72,7 +72,7 @@ namespace mpm{
   void split( string const& str, string const& separators, vector<string>& ans ){
   	size_t pos = 0 ; 
   	while( string::npos != ( pos = str.find_first_not_of(separators, pos ) ) ){
-  		size_t const next_sep = str.find_first_not_of( separators, pos ) ; 
+  		size_t const next_sep = str.find_first_of( separators, pos ) ; 
   		if ( string::npos == next_sep ){
   			ans.push_back( str.substr(pos) );
   			break;

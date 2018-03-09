@@ -172,7 +172,7 @@ Project_BINARY_DIR:STATIC=/home/yuan/Dropbox/whoAmI/mpm_implement/my_impl_mpm/sr
 Project_SOURCE_DIR:STATIC=/home/yuan/Dropbox/whoAmI/mpm_implement/my_impl_mpm/src/test
 
 //No help, variable specified on the command line.
-TESTS_NAMES:UNINITIALIZED=test_utils
+TESTS_NAMES:UNINITIALIZED=test_geo
 
 
 ########################

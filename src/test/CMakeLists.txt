@@ -51,6 +51,7 @@ include_directories( ../../third_party/eigen)
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 link_directories(/home/yuan/Dropbox/whoAmI/mpm_implement/my_impl_mpm/src/utils/build)
+link_directories(/home/yuan/Dropbox/whoAmI/mpm_implement/my_impl_mpm/src/geometry/build)
 
 
 ExternalProject_Get_Property(googletest binary_dir)
@@ -63,7 +64,7 @@ add_dependencies(test${CMAKE_PROJECT_NAME} googletest)
 
 target_link_libraries(test${CMAKE_PROJECT_NAME} ${EXTERNAL_LIBRARIES} ${GTEST_LINK_LIBRARIES} )
 
-target_link_libraries(test${CMAKE_PROJECT_NAME} mpm_utils)
+target_link_libraries(test${CMAKE_PROJECT_NAME} mpm_utils mpm_geo)
 
 # target_link_libraries(test${CMAKE_PROJECT_NAME} mpm_utils mpm_geo mpm_simu )
 
