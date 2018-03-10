@@ -1,9 +1,12 @@
 
 
-#include "string.h"
+#include "string.hh"
 
 
 #define WHITE_SPACE " \t\r\v\n\f"
+
+#include <algorithm>
+#include <iostream>
 
 using std::string ;
 using std::vector ;

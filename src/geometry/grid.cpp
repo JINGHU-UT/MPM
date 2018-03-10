@@ -76,8 +76,14 @@ namespace mpm{
           Voxel::getCornerDerivatives( corner, loc.coords, dc_dx.row( idx ) );
         }
 
-    for (int k = 0 ; k < 3 ; ++k)
+
+
+    for (int k = 0 ; k < 3 ; ++k){
       dc_dx.col( k ) *= m_idx[k] ;
+    }
+
+// std::cerr << " Grid::get_derivatives " << dc_dx << std::endl;
+
   }
 
 

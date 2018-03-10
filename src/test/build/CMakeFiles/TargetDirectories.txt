@@ -1,4 +1,0 @@
-/home/yuan/Dropbox/whoAmI/mpm_implement/my_impl_mpm/src/test/build/CMakeFiles/edit_cache.dir
-/home/yuan/Dropbox/whoAmI/mpm_implement/my_impl_mpm/src/test/build/CMakeFiles/rebuild_cache.dir
-/home/yuan/Dropbox/whoAmI/mpm_implement/my_impl_mpm/src/test/build/CMakeFiles/testProject.dir
-/home/yuan/Dropbox/whoAmI/mpm_implement/my_impl_mpm/src/test/build/CMakeFiles/googletest.dir

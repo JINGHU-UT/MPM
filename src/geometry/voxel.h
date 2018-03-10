@@ -4,6 +4,7 @@
 
 #include "utils/alg.h"
 #include "utils/scalar.h"
+#include <iostream>
 
 namespace mpm {
 
@@ -53,6 +54,8 @@ struct Voxel {
       copy = coeffs ; copy[k] = 2*corner[k] - 1 ;
       res[k] = copy.prod() ;
     }
+
+    // std::cerr << "getCornerDerivatives res = " << res << std::endl; 
   }
 
   Vec3 center() const {

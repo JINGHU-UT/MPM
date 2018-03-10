@@ -2,7 +2,20 @@
 #ifndef MPM_DYN_PARTICLES_H_
 #define MPM_DYN_PARTICLES_H_
 
+#include "phase.h"
+#include "scenario.h"
+
 #include "geometry/particles.h"
+#include "geometry/tensor.h"
+
+#include "utils/log.h"
+#include "utils/config.h"
+
+#include <bogus/Core/Utils/Timer.hpp>
+#include <Eigen/Eigenvalues>
+
+#include <random>
+
 
 namespace mpm {
 
@@ -13,7 +26,7 @@ class Scenario ;
 struct MergeInfo {
 	size_t  pid ;
 	Scalar  len ;
-	Vec		dir ;
+	Vec3		dir ;
 };
 
 

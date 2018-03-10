@@ -1,6 +1,11 @@
 
 
 #include "config.h"
+#include "utils/string.hh"
+#include "utils/log.h"
+#include <cmath>
+#include <fstream>
+// #include <regex>
 
 namespace mpm{
   template<typename dest_t>

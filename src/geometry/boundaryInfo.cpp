@@ -3,7 +3,7 @@
 #include "boundaryInfo.h"
 #include "tensor.h"
 
-#include "utils/string.h"
+#include "utils/string.hh"
 #include <Eigen/Geometry>
 
 

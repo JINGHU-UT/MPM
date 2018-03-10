@@ -1,15 +1,11 @@
 
 #include "activeIndices.h"
 
-#include "geometry/scalarField.h"
-#include "geometry/vectorField.h"
-#include "geometry/tensorField.h"
 
-#include "geometry/meshImpl.h"
 
 namespace mpm {
 
-const Index Active::s_Inactive = -1 ;
+const ID Active::s_Inactive = -1 ;
 
 void Active::computeRevIndices()
 {
@@ -17,14 +13,14 @@ void Active::computeRevIndices()
 
 #pragma omp parallel for
 	for( size_t i = 0 ; i < indices.size() ; ++i  ) {
-		const Index idx = indices[ i ] ;
+		const ID idx = indices[ i ] ;
 		if( idx != Active::s_Inactive ) {
 			revIndices[idx-offset] = i ;
 		}
 	}
 }
 
-void Active::setOffset(const Index dist)
+void Active::setOffset(const ID dist)
 {
 	offset = dist ;
 
@@ -38,14 +34,14 @@ void Active::setOffset(const Index dist)
 template < typename Derived >
 void Active::field2var( const FieldBase<Derived> &field, DynVec& var, bool resize ) const
 {
-	constexpr Index D = FieldBase<Derived>::D ;
+	constexpr ID D = FieldBase<Derived>::D ;
 
 	if( resize )
 		var.resize( (offset + D) * count() );
 
 #pragma omp parallel for
-	for( Index i = 0 ; i < nNodes ; ++ i) {
-		const Index idx = revIndices[ i ] ;
+	for( ID i = 0 ; i < nNodes ; ++ i) {
+		const ID idx = revIndices[ i ] ;
 		Segmenter<D>::segment( var, offset+i ) = field[ idx ] ;
 	}
 }
@@ -53,13 +49,13 @@ void Active::field2var( const FieldBase<Derived> &field, DynVec& var, bool resiz
 template < typename Derived >
 void Active::var2field( const DynVec& var,  FieldBase<Derived> &field ) const
 {
-	constexpr Index D = FieldBase<Derived>::D ;
+	constexpr ID D = FieldBase<Derived>::D ;
 
 	field.set_zero();
 
 #pragma omp parallel for
-	for( Index i = 0 ; i < nNodes ; ++ i) {
-		const Index idx = revIndices[ i ] ;
+	for( ID i = 0 ; i < nNodes ; ++ i) {
+		const ID idx = revIndices[ i ] ;
 		field[ idx ] = Segmenter<D>::segment( var, offset+i ) ;
 	}
 }

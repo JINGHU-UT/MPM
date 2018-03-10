@@ -1,12 +1,10 @@
 
 
-#ifndef MPM_UTIL_CONFIG_H_
-#define MPM_UTIL_CONFIG_H_
+#ifndef MPM__UTIL_CONFIG_H_
+#define MPM__UTIL_CONFIG_H_
 
 #include "utils/units.h"
 #include "utils/alg.h"
-#include "utils/string.h"
-#include "utils/log.h"
 
 #include <string>
 #include <cmath>

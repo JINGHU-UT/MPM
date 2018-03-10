@@ -6,6 +6,8 @@
 #define MPM_RIGID_BODY_H_
 
 #include "utils/alg.h"
+#include "geometry/levelSet.h"
+
 #include <memory>
 
 namespace mpm {

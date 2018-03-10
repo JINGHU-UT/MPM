@@ -4,7 +4,7 @@
 #define MPM_UTIL_LOG_H_
 
 #include "logLevels.h"
-#include "string.h"
+#include "string.hh"
 #include <mutex>
 #include <iostream>
 #include <sstream>
@@ -25,7 +25,7 @@ namespace mpm{
         return s_config ; 
       }
       
-      void setLevel( std::string& levelStr ){
+      void setLevel( std::string const& levelStr ){
         #define MPM_LOG_LEVEL( l ) \
           if ( levelStr == mpm_stringify( l )){ level = L_##l ; }
           MPM_LOG_LEVELS

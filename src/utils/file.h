@@ -8,7 +8,7 @@
 #include <list>
 #include <fstream>
 
-#include "string.h"
+#include "string.hh"
 #include "log.h"
 
 #include <stdlib.h>

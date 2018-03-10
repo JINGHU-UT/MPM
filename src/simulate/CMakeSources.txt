@@ -1,0 +1,10 @@
+simulate/activeIndices.cpp
+simulate/linearSolver.cpp
+simulate/rigidBody.cpp
+simulate/simulate.cpp
+simulate/dynParticles.cpp
+simulate/phaseSolver.cpp
+simulate/rigidBodyData.cpp
+simulate/formBuilder.cpp
+simulate/phaseStepData.cpp
+simulate/scenario.cpp

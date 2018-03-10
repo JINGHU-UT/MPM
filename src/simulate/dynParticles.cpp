@@ -2,17 +2,7 @@
 
 
 #include "dynParticles.h"
-#include "phase.h"
-#include "scenario.h"
 
-#include "geometry/tensor.h"
-
-#include "utils/log.h"
-#include "utils/config.h"
-
-#include <Eigen/Eigenvalues>
-
-#include <random>
 
 
 #define SPLIT
@@ -116,7 +106,7 @@ namespace mpm{
 
         Mat3 Bp = Mat3::Zero() ;
 
-        for( Index k = 0 ; k < MeshType::NV ; ++k ) {
+        for( ID k = 0 ; k < MeshType::NV ; ++k ) {
           Bp += phase.velocity[ itp.nodes[k] ] * derivatives.row(k) ;
         }
 
@@ -215,7 +205,7 @@ namespace mpm{
       mesh.locate( p0, loc );
       mesh.interpolate( loc, itp );
 
-      activeCells[ mesh.cellIndex( loc.cell ) ] = true ;
+      activeCells[ mesh.cellID( loc.cell ) ] = true ;
 
       // Accumulate particle data at grid nodes
 
@@ -234,7 +224,7 @@ namespace mpm{
         typename MeshType::CellGeo cellGeo ;
         mesh.get_geo( loc.cell, cellGeo );
 
-        for( Index k = 0 ; k < MeshType::NV ; ++k ) {
+        for( ID k = 0 ; k < MeshType::NV ; ++k ) {
           phiVel[ itp.nodes[k] ] += m * itp.coeffs[k] * ( affine * ( cellGeo.vertex( k ) - p0 ) ) ;
         }
       }
@@ -327,7 +317,7 @@ namespace mpm{
           mesh.locate( m_geo.centers().col(i), loc );
           MergeInfo mgi { i, evMin, es.eigenvectors().col(kMin) }  ;
     #pragma omp critical
-          mg_hash[ mesh.cellIndex( loc.cell ) ].push_back( mgi ) ;
+          mg_hash[ mesh.cellID( loc.cell ) ].push_back( mgi ) ;
         }
     #endif
       }

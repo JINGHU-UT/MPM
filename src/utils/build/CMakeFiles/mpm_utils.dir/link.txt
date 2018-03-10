@@ -1,1 +1,0 @@
-/usr/bin/c++  -fPIC  -std=c++11  -shared -Wl,-soname,libmpm_utils.so -o libmpm_utils.so CMakeFiles/mpm_utils.dir/config.cpp.o CMakeFiles/mpm_utils.dir/file.cpp.o CMakeFiles/mpm_utils.dir/stats.cpp.o CMakeFiles/mpm_utils.dir/string.cpp.o CMakeFiles/mpm_utils.dir/units.cpp.o 
